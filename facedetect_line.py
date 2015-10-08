@@ -1,13 +1,6 @@
 #!/usr/bin/python
 # coding: utf -8                   #加上這行才能key中文 要import urllib2
 import urllib2
-"""
-This program is demonstration for face and object detection using haar-like features.
-The program finds faces in a camera image or video stream and displays a red box around them.
-
-Original C implementation by:  ?
-Python implementation by: Roman Stanchak, James Bowman
-"""
 import sys
 import cv2.cv as cv
 import cv2
