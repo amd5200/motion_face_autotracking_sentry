@@ -34,4 +34,7 @@ while True:
    if ch == 'd':
       arduino.write('6')
       print '6' 
-
+ # fire
+   if ch == 'f':
+      arduino.write('5')
+      print '5' 
