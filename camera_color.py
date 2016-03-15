@@ -10,9 +10,12 @@ arduino=serial.Serial('/dev/ttyUSB1',9600)     #set arduino serial port
 
 cv.NamedWindow("color_tracking", 1)
 
+#創建一個矩形，來讓我們在圖片上寫文字，參數依次定義了文字類型，高，寬，字體厚度等。
+font=cv.InitFont(cv.CV_FONT_HERSHEY_SIMPLEX, 1, 1, 0, 3, 4)
+
 #capture = cv.CaptureFromCAM(0)
-#capture = cv.CaptureFromCAM(1)
-capture = cv.CaptureFromCAM(2)
+capture = cv.CaptureFromCAM(1)
+#capture = cv.CaptureFromCAM(2)
 
 #width = 160 #leave None for auto-detection
 #height = 120 #leave None for auto-detection
@@ -30,7 +33,10 @@ while True:
     cv.CvtColor(img, hue_img, cv.CV_BGR2HSV)
 
     threshold_img = cv.CreateImage(cv.GetSize(hue_img), 8, 1)
-    cv.InRangeS(hue_img, (38,120,60), (75,255,255), threshold_img)
+    #Python: cv.InRangeS(src, lower, upper, dst) http://www.colorspire.com/
+    #cv.InRangeS(hue_img, (38,120,60), (75,255,255), threshold_img)          # color code green
+    cv.InRangeS(hue_img, (100,120,60), (200,255,255), threshold_img)          # color code blue
+    #cv.InRangeS(hue_img, (0,100,60), (10,255,255), threshold_img)           # color code red
     
     storage = cv.CreateMemStorage(0)
     contour = cv.FindContours(threshold_img, storage, cv.CV_RETR_CCOMP, cv.CV_CHAIN_APPROX_SIMPLE)
@@ -51,6 +57,14 @@ while True:
             print cx, cy                            ######################<--160x120 pix
                                                     ######################
                                                     ############(160,120)#
+#將文字框加入到圖片中，(5,30)定義了文字框左頂點在窗口中的位置，最後參數定義文字顏色
+            
+            if cx <= (width*1/2) and cy >= (height*1/2) :
+                 TestStr = "Locking"
+                 cv.PutText(img, TestStr , (5,30), font, (0,0,255))
+            else:
+                 TestStr = "serching...."
+                 cv.PutText(img, TestStr , (5,30), font, (0,255,0))
 ######################################### servo motor ######################################################
             if cx < width*3/ 7 :
                  arduino.write('4')
