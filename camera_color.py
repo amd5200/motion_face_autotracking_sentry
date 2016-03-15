@@ -14,8 +14,8 @@ cv.NamedWindow("color_tracking", 1)
 font=cv.InitFont(cv.CV_FONT_HERSHEY_SIMPLEX, 1, 1, 0, 3, 4)
 
 #capture = cv.CaptureFromCAM(0)
-capture = cv.CaptureFromCAM(1)
-#capture = cv.CaptureFromCAM(2)
+#capture = cv.CaptureFromCAM(1)
+capture = cv.CaptureFromCAM(2)
 
 #width = 160 #leave None for auto-detection
 #height = 120 #leave None for auto-detection
