@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # coding: utf -8                   #加上這行才能key中文 要import urllib2
 import urllib2
+"""
+This program is demonstration for face and object detection using haar-like features.
+The program finds faces in a camera image or video stream and displays a red box around them.
+
+Original C implementation by:  ?
+Python implementation by: Roman Stanchak, James Bowman
+"""
 import sys
 import cv2.cv as cv
 import cv2
@@ -21,12 +28,19 @@ image_scale = 2
 haar_scale = 1.2
 min_neighbors = 2
 haar_flags = 0
-arduino=serial.Serial('/dev/ttyUSB1',9600)
+arduino=serial.Serial('/dev/ttyUSB0',9600)
+
+#创建一个矩形，来让我们在图片上写文字，参数依次定义了文字类型，高，宽，字体厚度等。
+font=cv.InitFont(cv.CV_FONT_HERSHEY_SIMPLEX, 1, 1, 0, 3, 4)
 
 #width = 160 #leave None for auto-detection
 #height = 120 #leave None for auto-detection
+#width = 320 #leave None for auto-detection
+#height = 240 #leave None for auto-detection
 width = 640 #leave None for auto-detection
 height = 480 #leave None for auto-detection
+middle_w = 2 #Cross Center width 十字中心歸零校正,數字越大線往左
+middle_h = 2 #Cross Center height 十字中心歸零校正,數字越大線往上
 
 def detect_and_draw(img, cascade):
     # allocate temporary images
@@ -42,20 +56,15 @@ def detect_and_draw(img, cascade):
 
     cv.EqualizeHist(small_img, small_img)
 
-#######   若解析度有改變，下面劃線座標亦隨之改變##############
-    '''
-    cv.Line(img, (210,0),(210,480), (0,255,255),1) 
-    cv.Line(img, (420,0),(420,480), (0,255,255),1) 
-    cv.Line(img, (0,160),(640,160), (0,255,255),1) 
-    cv.Line(img, (0,320),(640,320), (0,255,255),1)
-    '''
-    cv.Line(img, (width/2,0),(width/2,height), (0,10,255),3) 
-    cv.Line(img, ((width/2-20),(height/2-10)),((width/2-20),(height/2+10)), (0,10,255),2)
-    cv.Line(img, ((width/2+20),(height/2-10)),((width/2+20),(height/2+10)), (0,10,255),2) 
-    cv.Line(img, (0,height/2),(width,height/2), (0,10,255),3) 
-    cv.Line(img, ((width/2-10),(height/2-20)),((width/2+10),(height/2-20)), (0,10,255),2)
-    cv.Line(img, ((width/2-10),(height/2+20)),((width/2+10),(height/2+20)), (0,10,255),2)
-    
+######   若解析度有改變，下面劃線座標亦隨之改變##############
+    cv.Line(img, (width/middle_w,0),(width/middle_w,height), (0,10,255),3) 
+    cv.Line(img, ((width/middle_w-20),(height/middle_h-10)),((width/middle_w-20),(height/middle_h+10)), (0,10,255),2)
+    cv.Line(img, ((width/middle_w+20),(height/middle_h-10)),((width/middle_w+20),(height/middle_h+10)), (0,10,255),2) 
+    cv.Line(img, (0,height/middle_h),(width,height/middle_h), (0,10,255),3) 
+    cv.Line(img, ((width/middle_w-10),(height/middle_h-20)),((width/middle_w+10),(height/middle_h-20)), (0,10,255),2)
+    cv.Line(img, ((width/middle_w-10),(height/middle_h+20)),((width/middle_w+10),(height/middle_h+20)), (0,10,255),2)
+    #cv.ShowImage("camera", img)
+     
     if(cascade):
         t = cv.GetTickCount()
         faces = cv.HaarDetectObjects(small_img, cascade, cv.CreateMemStorage(0),
@@ -73,7 +82,24 @@ def detect_and_draw(img, cascade):
                 cx = (int(x * image_scale) + int((x + w) * image_scale)) / 2
                 cy = (int(y * image_scale) + int((y + h) * image_scale)) / 2
                 print cx, cy
-####################################################
+#将文字框加入到图片中，(5,30)定义了文字框左顶点在窗口中的位置，最后参数定义文字颜色
+                '''
+                if cx <= (width*2/3) and cx >= (width*1/3) and cy <= (height*2/3) and cy >= (height*1/3) :
+                     TestStr = "Locking"
+                     cv.PutText(img, TestStr , (5,30), font, (0,0,255))
+                else:
+                     TestStr = "serching...."
+                     cv.PutText(img, TestStr , (160,30), font, (0,255,0))
+                '''
+
+                if cx <= (width*4/7) and cx >= (width*3/7) and cy <= (height*4/7) and cy >= (height*3/7) :
+                     TestStr = "Locking"
+                     cv.PutText(img, TestStr , (5,30), font, (0,0,255))
+                else:
+                     TestStr = "serching...."
+                     cv.PutText(img, TestStr , (160,30), font, (0,255,0))
+
+#################################################################################################################
                 if cx < img.width*3/ 7 :
                      arduino.write('4')
                      print '4'
@@ -117,8 +143,16 @@ def detect_and_draw(img, cascade):
     cv.ShowImage("result", img)
 
 if __name__ == '__main__':
+
+    #cascade = cv.Load("haarcascade_eye_tree_eyeglasses.xml")
     cascade = cv.Load("haarcascade_frontalface_alt.xml")
     #cascade = cv.Load("cars3.xml")
+    #cascade = cv.Load("haarcascade_upperbody.xml")
+    #cascade = cv.Load("aGest.xml")
+    #cascade = cv.Load("haarcascade_fullbody.xml")
+    #cascade = cv.Load("closed_frontal_palm.xml")
+    #cascade = cv.Load("palm.xml")
+    #cascade = cv.Load("smile.xml")
     capture = cv.CreateCameraCapture(2)                   # camera   NO. 0, 1, 2
     print cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_WIDTH)
 
