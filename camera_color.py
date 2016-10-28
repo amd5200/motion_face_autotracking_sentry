@@ -6,7 +6,7 @@ import sys
 import serial
 import time
 
-arduino=serial.Serial('/dev/ttyUSB1',9600)     #set arduino serial port
+arduino=serial.Serial('/dev/ttyUSB0',9600)     #set arduino serial port
 
 cv.NamedWindow("color_tracking", 1)
 
@@ -59,7 +59,7 @@ while True:
                                                     ############(160,120)#
 #将文字框加入到图片中，(5,30)定义了文字框左顶点在窗口中的位置，最后参数定义文字颜色
             
-            if cx <= (width*2/3) and cx >= (width*1/3) and cy <= (height*2/3) and cy >= (height*1/3) :
+            if cx <= (width*4/7) and cx >= (width*3/7) and cy <= (height*4/7) and cy >= (height*3/7) :
                  TestStr = "Locking"
                  cv.PutText(img, TestStr , (5,30), font, (0,0,255))
             else:
