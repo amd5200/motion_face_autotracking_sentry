@@ -8,11 +8,13 @@ import sys
 import serial
 import time
 
-arduino=serial.Serial('/dev/ttyUSB1',9600)     #set arduino serial port
-#width = 160 #leave None for auto-detection
-#height = 120 #leave None for auto-detection
-width = 320 #leave None for auto-detection
-height = 240 #leave None for auto-detection
+#arduino=serial.Serial('/dev/ttyS2',9600)      #banana pi
+#arduino=serial.Serial('/dev/ttyAMA0',9600)    #raspberry pi
+arduino=serial.Serial('/dev/ttyUSB0',9600)     #set arduino serial port
+width = 160 #leave None for auto-detection
+height = 120 #leave None for auto-detection
+#width = 320 #leave None for auto-detection
+#height = 240 #leave None for auto-detection
 
 class Target:
 
@@ -121,45 +123,45 @@ class Target:
 ######################################### servo motor ######################################################
 
 
-                if cx < width*5/ 10 :                  
+                if cx < width*5/ 10 and cx > width*4/ 10 :                  
                      arduino.write('e')                
                      print 'e'
-                if cx < width*4/ 10 :                  
+                if cx < width*4/ 10 and cx > width*3/ 10 :                  
                      arduino.write('d')                
                      print 'd'
-                if cx < width*3/ 10 :                  
+                if cx < width*3/ 10 and cx > width*2/ 10 :                  
                      arduino.write('c')                
                      print 'c'                        
-		if cx < width*2/ 10 :
+		if cx < width*2/ 10 and cx > width/ 10 :
                      arduino.write('b')
                      print 'b'
 		if cx < width/ 10 :
                      arduino.write('a')
                      print 'a'
 
-                if cx > width*6 / 10 :
+                if cx > width*6 / 10 and cx < width*7/ 10 :
                      arduino.write('f')
                      print 'f'
-                if cx > width*7/ 10 :
+                if cx > width*7/ 10 and cx < width*8/ 10 :
                      arduino.write('g')
                      print 'g'
-                if cx > width*8/ 10 :
+                if cx > width*8/ 10 and cx < width*9/ 10 :
                      arduino.write('h')
                      print 'h'
                 if cx > width*9/ 10 :
                      arduino.write('i')
                      print 'i'
 
-                if cy < height*5/ 10:
+                if cy < height*5/ 10 and cy > height*4/ 10 :
                      arduino.write('n')
                      print 'n'
-                if cy < height*4/ 10:
+                if cy < height*4/ 10 and cy > height*3/ 10 :
                      arduino.write('m')
                      print 'm'
-                if cy < height*3/ 10:
+                if cy < height*3/ 10 and cy > height*2/ 10 :
                      arduino.write('l')
                      print 'l'
-                if cy < height*2/ 10:
+                if cy < height*2/ 10 and cy > height/ 10 :
                      arduino.write('k')
                      print 'k'
                 if cy < height/ 10:
@@ -167,13 +169,13 @@ class Target:
                      print 'j'
 
 
-                if cy > height*6 / 10:
+                if cy > height*6 / 10 and cy < height*7 / 10 :
                      arduino.write('o')
                      print 'o'
-                if cy > height*7 / 10:
+                if cy > height*7 / 10 and cy < height*8 / 10 :
                      arduino.write('p')
                      print 'p'
-                if cy > height*8 / 10:
+                if cy > height*8 / 10 and cy < height*9 / 10 :
                      arduino.write('q')
                      print 'q'     
                 if cy > height*9 / 10:
